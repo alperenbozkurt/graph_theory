@@ -14,7 +14,7 @@ class Graph
       nodes << Node.new(count.to_s)       # n tane node oluşturur
     end
 
-    return Graph.new(nodes.map)           # Oluşturulan node'larla bir graf oluşturup return eder.
+    return Graph.new(nodes)           # Oluşturulan node'larla bir graf oluşturup return eder.
   end
 
   def add_node(node)        # Grafa ekstra node eklenmek istenirse kullanılır.
@@ -29,6 +29,22 @@ class Graph
 
   def add_edge(node1, node2) # iki node birbirine bağlanmak istenirse kullanılır.
     node1.add_edge(node2)    # bu işlem Node sınıfında halledilir.
+  end
+
+  def add_edge_from_index(index_node1, index_node2)
+    nodes[index_node1].add_edge(nodes[index_node2])
+  end
+
+  def adjoint_matrix        # Komşuluk matrix'ini string olarak veren methoddur.
+    matrix = ""
+    nodes.each_with_index do |node, index|
+      nodes.each_with_index do |other_node, other_index|
+        is_neighbor = node.neighbor?(other_node)
+        matrix << (is_neighbor ? "1 " : "0 ")
+      end
+      matrix << "\n"
+    end
+    return matrix
   end
 end
 
@@ -46,4 +62,24 @@ end
 
 # g2.add_edge(n1, n2)                 # Grata iki node arasına bir edge oluşturmak için kullanılır.
 
+# puts n1.neighbor? n2                # N1 düğümü ile n2 düğümü komşu mu ?
+
 # puts g2.nodes                       # Ekrana graftaki bütün nodeları ve komşularını yazdırır.
+
+# puts g2.adjoint_matrix              # g2 grafının komşuluk matrisini string olarak verir.
+
+g3 = Graph.create_null_graph(6)
+
+g3.add_edge_from_index(1,2);
+g3.add_edge_from_index(2,3);
+g3.add_edge_from_index(3,4);
+g3.add_edge_from_index(4,5);
+g3.add_edge_from_index(1,5);
+
+g3.add_edge_from_index(0,1);
+g3.add_edge_from_index(0,2);
+g3.add_edge_from_index(0,3);
+g3.add_edge_from_index(0,4);
+g3.add_edge_from_index(0,5);
+
+puts g3.adjoint_matrix

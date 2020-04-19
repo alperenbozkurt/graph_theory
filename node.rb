@@ -18,6 +18,14 @@ class Node
     end
   end
 
+  def neighbors
+    edges.map(&:root)
+  end
+
+  def neighbor?(node)
+    edges.include?(node)
+  end
+
   def to_s      # Düğümü ve komşularını yazdırmak için kullanılan method
     "Bu düğüm : " + self.root + "\n -> Komşuları ise: " + edges.map(&:root).join(', ')
   end
