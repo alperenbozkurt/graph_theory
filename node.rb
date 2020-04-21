@@ -19,7 +19,7 @@ class Node
   end
 
   def neighbors
-    edges.map(&:root)
+    edges
   end
 
   def neighbor?(node)

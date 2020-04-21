@@ -46,6 +46,27 @@ class Graph
     end
     return matrix
   end
+
+
+  def dfs(root_node, visited_nodes=nil, tree=nil)
+    if visited_nodes.nil?
+      tree = Graph.new
+      visited_nodes = nodes.zip(Array.new(nodes.count, 0)).to_h
+      tree.add_node(Node.new(root_node.root))
+    end
+
+    visited_nodes[root_node] = 1
+
+    root_node.neighbors.each do |neighbor|
+      if visited_nodes[neighbor].zero?
+        visited_nodes, tree = dfs(neighbor, visited_nodes, tree)
+        node = Node.new(neighbor.root)
+        neighbor = tree.add_node(node)
+        tree.add_edge(root_node, neighbor)
+      end
+    end
+    return visited_nodes, tree
+  end
 end
 
 
@@ -72,7 +93,7 @@ g3 = Graph.create_null_graph(6)
 
 g3.add_edge_from_index(1,2);
 g3.add_edge_from_index(2,3);
-g3.add_edge_from_index(3,4);
+# g3.add_edge_from_index(3,4);
 g3.add_edge_from_index(4,5);
 g3.add_edge_from_index(1,5);
 
@@ -83,3 +104,7 @@ g3.add_edge_from_index(0,4);
 g3.add_edge_from_index(0,5);
 
 puts g3.adjoint_matrix
+
+root_node = g3.nodes[0]
+a = g3.dfs(root_node)
+puts a[1].nodes
