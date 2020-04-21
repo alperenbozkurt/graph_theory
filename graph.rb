@@ -17,6 +17,22 @@ class Graph
     return Graph.new(nodes)           # Oluşturulan node'larla bir graf oluşturup return eder.
   end
 
+  def self.create_wheel_graph(node_count)
+    nodes = []
+    node_count.times do |count|
+      nodes << Node.new(count.to_s)
+    end
+    graph = Graph.new(nodes)
+    nodes.each_with_index do |node, index|
+      if index > 0
+        graph.add_edge_from_index(index, index - 1);
+        graph.add_edge_from_index(0, index);
+      end
+    end
+    graph.add_edge_from_index(1, nodes.count - 1);
+    return graph
+  end
+
   def add_node(node)        # Grafa ekstra node eklenmek istenirse kullanılır.
     nodes << node
   end
@@ -47,25 +63,50 @@ class Graph
     return matrix
   end
 
-
+  def fix_edges
+    nodes.each do |node|
+      node.fix_edges
+    end
+  end
+  def include?(node)
+    nodes.map(&:root).include? node.root
+  end
+  def find(node)
+    nodes.each do |nodex|
+      if nodex.root == node.root
+        return nodex
+      end
+    end
+    return nil
+  end
   def dfs(root_node, visited_nodes=nil, tree=nil)
+    is_root_node = false
     if visited_nodes.nil?
       tree = Graph.new
+      is_root_node = true
       visited_nodes = nodes.zip(Array.new(nodes.count, 0)).to_h
-      tree.add_node(Node.new(root_node.root))
+    end
+    new_root_node = tree.find(root_node)
+    unless new_root_node
+      new_root_node = Node.new(root_node.root)
+      tree.add_node(new_root_node)
     end
 
     visited_nodes[root_node] = 1
 
     root_node.neighbors.each do |neighbor|
       if visited_nodes[neighbor].zero?
+        new_node = Node.new(neighbor.root)
+        tree.add_node(new_node)
+        tree.add_edge(new_node, new_root_node)
         visited_nodes, tree = dfs(neighbor, visited_nodes, tree)
-        node = Node.new(neighbor.root)
-        neighbor = tree.add_node(node)
-        tree.add_edge(root_node, neighbor)
       end
     end
-    return visited_nodes, tree
+    if is_root_node
+      return tree
+    else
+      return visited_nodes, tree
+    end
   end
 end
 
@@ -89,22 +130,11 @@ end
 
 # puts g2.adjoint_matrix              # g2 grafının komşuluk matrisini string olarak verir.
 
-g3 = Graph.create_null_graph(6)
+# ---------------------------------------------------------------------
 
-g3.add_edge_from_index(1,2);
-g3.add_edge_from_index(2,3);
-# g3.add_edge_from_index(3,4);
-g3.add_edge_from_index(4,5);
-g3.add_edge_from_index(1,5);
+# g3 = Graph.create_wheel_graph(6)    # root düğüm ile birlikte 6 düğümü olan bir tekerlek graf oluşturur
+# puts g3.adjoint_matrix, ""
 
-g3.add_edge_from_index(0,1);
-g3.add_edge_from_index(0,2);
-g3.add_edge_from_index(0,3);
-g3.add_edge_from_index(0,4);
-g3.add_edge_from_index(0,5);
-
-puts g3.adjoint_matrix
-
-root_node = g3.nodes[0]
-a = g3.dfs(root_node)
-puts a[1].nodes
+# root_node = g3.nodes[0]             # dfsnin başlangıç düğümünü seçiyoruz
+# dfs_tree = g3.dfs(root_node)        # grafı dfs algoritması ile ağaca çevirir.
+# puts dfs_tree.adjoint_matrix        # dfs ağacının adjoint matrisini verir

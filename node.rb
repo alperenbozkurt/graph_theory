@@ -26,6 +26,13 @@ class Node
     edges.include?(node)
   end
 
+  def fix_edges
+    puts edges
+    edges.each do |node|
+      self.add_edge(node)
+    end
+  end
+
   def to_s      # Düğümü ve komşularını yazdırmak için kullanılan method
     "Bu düğüm : " + self.root + "\n -> Komşuları ise: " + edges.map(&:root).join(', ')
   end
