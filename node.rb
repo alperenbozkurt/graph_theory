@@ -33,6 +33,10 @@ class Node
     end
   end
 
+  def edges_count
+    edges.count
+  end
+  
   def to_s      # Düğümü ve komşularını yazdırmak için kullanılan method
     "Bu düğüm : " + self.root + "\n -> Komşuları ise: " + edges.map(&:root).join(', ')
   end

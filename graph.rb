@@ -137,6 +137,58 @@ class Graph
     end
     return is_root_node ? tree : [visited_nodes, tree]
   end
+
+  def euler_path?
+    nodes.sum(&:edges_count).even?
+  end
+
+  def euler_path
+    gezilen = []
+    yollar = []
+    nodes.each do |node|
+      node.neighbors.each do |neighbor|
+        unless yollar.include?((node.root + ',' + neighbor.root) || (neighbor.root + ',' + node.root))
+          yollar << (node.root + "," + neighbor.root)
+        end
+      end
+    end
+
+    devam, bitti = false, false
+    nodes.each do |node|
+      root_node = node
+      100.times do
+        until yollar.empty?
+          new_root = root_node.neighbors.sample
+          if yollar.include?((root_node.root + ',' + new_root.root) || (new_root.root + ',' + root_node.root))
+            gezilen << root_node
+            # puts (root_node.root + ',' + new_root.root)
+            if yollar.include?((root_node.root + ',' + new_root.root))
+              yollar.delete((root_node.root + ',' + new_root.root).to_s)
+            else
+              yollar.delete((new_root.root + ',' + root_node.root).to_s)
+            end
+            root_node = new_root
+            # puts yollar.count
+          end
+          devam = false
+          root_node.neighbors.each do |neighbor|
+            if yollar.include?(root_node.root + ',' + neighbor.root)
+              devam = true
+            end
+          end
+          if !devam
+            if yollar.count == 0
+              puts "Bitti" + yollar.count.to_s
+              puts gezilen.map(&:root).join(", ")
+            else
+              puts "Yol bulunamadı" + yollar.count.to_s
+            end
+            break
+          end
+        end
+      end
+    end
+  end
 end
 
 
@@ -161,9 +213,16 @@ end
 
 # ---------------------------------------------------------------------
 
-g3 = Graph.create_wheel_graph(6)    # root düğüm ile birlikte 6 düğümü olan bir tekerlek graf oluşturur
-puts g3.adjoint_matrix, ""
+# g3 = Graph.create_wheel_graph(6)    # root düğüm ile birlikte 6 düğümü olan bir tekerlek graf oluşturur
+# puts g3.adjoint_matrix, ""
 
-root_node = g3.nodes[0]             # dfsnin başlangıç düğümünü seçiyoruz
-dfs_tree = g3.bfs(root_node)        # grafı dfs algoritması ile ağaca çevirir.
-puts dfs_tree.adjoint_matrix        # dfs ağacının adjoint matrisini verir
+# root_node = g3.nodes[0]             # dfsnin başlangıç düğümünü seçiyoruz
+# dfs_tree = g3.bfs(root_node)        # grafı dfs algoritması ile ağaca çevirir.
+# dfs_tree.adjoint_matrix        # dfs ağacının adjoint matrisini verir
+
+# --------------------------------------------------------------------
+
+g4 = Graph.create_wheel_graph(7)    # root düğüm ile birlikte 6 düğümü olan bir tekerlek graf oluşturur
+puts g4.adjoint_matrix, ""
+
+g4.euler_path
