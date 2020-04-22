@@ -191,20 +191,15 @@ class Graph
   end
 
   def hammiltion_path
-    dugumler = nodes
-    path = []
-    puts dugumler.count
     nodes.each do |node|
-      dugumler = nodes
-      path = []
-      devamke = false
-      root_node = node
-      # puts dugumler.count
       100.times do |i|
+        dugumler = nodes.dup
+        path = []
+        devamke = false
+        root_node = node
         until dugumler.empty?
           new_root = root_node.neighbors.sample
           if dugumler.include?(new_root)
-            # puts new_root.root + ', ' + dugumler.count.to_s
             path << new_root
             dugumler.delete(new_root)
             root_node = new_root
@@ -226,6 +221,40 @@ class Graph
       end
     end
     return nil
+  end
+
+  def hammiltion_path?
+    nodes.each do |node|
+      10000.times do |i|
+        dugumler = nodes.dup
+        path = []
+        devamke = false
+        root_node = node
+        until dugumler.empty?
+          new_root = root_node.neighbors.sample
+          if dugumler.include?(new_root)
+            # puts new_root.root + ', ' + dugumler.count.to_s
+            path << new_root
+            dugumler.delete(new_root)
+            root_node = new_root
+          end
+          devamke = false
+          root_node.neighbors.each do |neighbor|
+            if dugumler.include?(neighbor)
+              devamke = true
+            end
+          end
+          if !devamke
+            if dugumler.count == 0
+              return true
+            else
+              break
+            end
+          end
+        end
+      end
+    end
+    return false
   end
 end
 
@@ -269,4 +298,5 @@ end
 # --------------------------------------------------------------------
 
 g5 = Graph.create_wheel_graph(7)
+puts g5.hammiltion_path?
 puts g5.hammiltion_path
