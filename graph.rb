@@ -180,16 +180,52 @@ class Graph
           end
           if !devam
             if yollar.count == 0
-              puts "Bitti" + yollar.count.to_s
               puts gezilen.map(&:root).join(", ")
-            else
-              puts "Yol bulunamadı" + yollar.count.to_s
             end
             break
           end
         end
       end
     end
+    return yollar
+  end
+
+  def hammiltion_path
+    dugumler = nodes
+    path = []
+    puts dugumler.count
+    nodes.each do |node|
+      dugumler = nodes
+      path = []
+      devamke = false
+      root_node = node
+      # puts dugumler.count
+      100.times do |i|
+        until dugumler.empty?
+          new_root = root_node.neighbors.sample
+          if dugumler.include?(new_root)
+            # puts new_root.root + ', ' + dugumler.count.to_s
+            path << new_root
+            dugumler.delete(new_root)
+            root_node = new_root
+          end
+          devamke = false
+          root_node.neighbors.each do |neighbor|
+            if dugumler.include?(neighbor)
+              devamke = true
+            end
+          end
+          if !devamke
+            if dugumler.count == 0
+              return path.map(&:root).join(", ")
+            else
+              break
+            end
+          end
+        end
+      end
+    end
+    return nil
   end
 end
 
@@ -220,11 +256,17 @@ end
 
 # root_node = g3.nodes[0]             # dfsnin başlangıç düğümünü seçiyoruz
 # dfs_tree = g3.bfs(root_node)        # grafı dfs algoritması ile ağaca çevirir.
-# dfs_tree.adjoint_matrix        # dfs ağacının adjoint matrisini verir
+# dfs_tree.adjoint_matrix             # dfs ağacının adjoint matrisini verir
 
 # --------------------------------------------------------------------
 
-g4 = Graph.create_wheel_graph(7)    # root düğüm ile birlikte 6 düğümü olan bir tekerlek graf oluşturur
-puts g4.adjoint_matrix, ""
+# g4 = Graph.create_wheel_graph(7)    # root düğüm ile birlikte 6 düğümü olan bir tekerlek graf oluşturur
+# puts g4.adjoint_matrix, ""
 
-g4.euler_path
+# g4.euler_path?
+# g4.euler_path
+
+# --------------------------------------------------------------------
+
+g5 = Graph.create_wheel_graph(7)
+puts g5.hammiltion_path
