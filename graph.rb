@@ -258,6 +258,8 @@ class Graph
   end
 end
 
+# ---------------------------------------------------------------------
+#                                Graph
 
 # g = Graph.create_null_graph(5)      # 5 nodu olan boş bir graf oluşturur.
 # puts g.nodes                        # Ekrana graftaki bütün nodeları ve komşularını yazdırır.
@@ -278,7 +280,20 @@ end
 
 # puts g2.adjoint_matrix              # g2 grafının komşuluk matrisini string olarak verir.
 
+
 # ---------------------------------------------------------------------
+#                                DFS
+
+# g3 = Graph.create_wheel_graph(6)    # root düğüm ile birlikte 6 düğümü olan bir tekerlek graf oluşturur
+# puts g3.adjoint_matrix, ""
+
+# root_node = g3.nodes[0]             # dfsnin başlangıç düğümünü seçiyoruz
+# dfs_tree = g3.dfs(root_node)        # grafı dfs algoritması ile ağaca çevirir.
+# dfs_tree.adjoint_matrix             # dfs ağacının adjoint matrisini verir
+
+
+# ---------------------------------------------------------------------
+#                                BFS
 
 # g3 = Graph.create_wheel_graph(6)    # root düğüm ile birlikte 6 düğümü olan bir tekerlek graf oluşturur
 # puts g3.adjoint_matrix, ""
@@ -288,15 +303,17 @@ end
 # dfs_tree.adjoint_matrix             # dfs ağacının adjoint matrisini verir
 
 # --------------------------------------------------------------------
+#                             Euler Path
 
 # g4 = Graph.create_wheel_graph(7)    # root düğüm ile birlikte 6 düğümü olan bir tekerlek graf oluşturur
-# puts g4.adjoint_matrix, ""
 
 # g4.euler_path?
 # g4.euler_path
 
 # --------------------------------------------------------------------
+#                           Hammiltion Path
 
-g5 = Graph.create_wheel_graph(7)
-puts g5.hammiltion_path?
-puts g5.hammiltion_path
+# g5 = Graph.create_wheel_graph(7)
+
+# g5.hammiltion_path?
+# g5.hammiltion_path
