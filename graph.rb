@@ -147,7 +147,9 @@ class Graph
     yollar = []
     nodes.each do |node|
       node.neighbors.each do |neighbor|
-        unless yollar.include?((node.root + ',' + neighbor.root) || (neighbor.root + ',' + node.root))
+        if yollar.include?((node.root + ',' + neighbor.root)) || yollar.include?((neighbor.root + ',' + node.root))
+          "s"
+        else
           yollar << (node.root + "," + neighbor.root)
         end
       end
@@ -159,7 +161,7 @@ class Graph
       100.times do
         until yollar.empty?
           new_root = root_node.neighbors.sample
-          if yollar.include?((root_node.root + ',' + new_root.root) || (new_root.root + ',' + root_node.root))
+          if yollar.include?((root_node.root + ',' + new_root.root)) || yollar.include?((new_root.root + ',' + root_node.root))
             gezilen << root_node
             # puts (root_node.root + ',' + new_root.root)
             if yollar.include?((root_node.root + ',' + new_root.root))
